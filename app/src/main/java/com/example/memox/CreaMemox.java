@@ -1,8 +1,11 @@
 package com.example.memox;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 public class CreaMemox extends Activity {
@@ -25,5 +28,14 @@ public class CreaMemox extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
 
+        final Button back = findViewById((R.id.back));
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CreaMemox.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

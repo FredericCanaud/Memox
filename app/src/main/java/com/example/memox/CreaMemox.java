@@ -22,7 +22,7 @@ public class CreaMemox extends Activity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(CreaMemox.this, android.R.layout.simple_spinner_dropdown_item, selectItems);
         //set the spinners adapter to the previously created one.
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dropdown.setAdapter(adapter);
 
     }

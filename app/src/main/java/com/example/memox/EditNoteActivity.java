@@ -19,7 +19,7 @@ import java.util.Date;
 public class EditNoteActivity extends AppCompatActivity {
 
     private EditText inputNote;
-    private NotesModeleDB dao;
+    private NotesModeleDB modeleDB;
     private Note temp;
     public static final String NOTE_EXTRA_Key = "note_id";
 
@@ -35,10 +35,10 @@ public class EditNoteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         inputNote = findViewById(R.id.input_note);
-        dao = NotesDB.getInstance(this).notesInterface();
+        modeleDB = NotesDB.getInstance(this).notesInterface();
         if (getIntent().getExtras() != null) {
             int id = getIntent().getExtras().getInt(NOTE_EXTRA_Key, 0);
-            temp = dao.getNoteById(id);
+            temp = modeleDB.getNoteById(id);
             inputNote.setText(temp.getTexte());
         } else inputNote.setFocusable(true);
 
@@ -64,11 +64,11 @@ public class EditNoteActivity extends AppCompatActivity {
             long date = new Date().getTime();
             if (temp == null) {
                 temp = new Note(text, date);
-                dao.sauvegarderNote(temp);
+                modeleDB.sauvegarderNote(temp);
             } else {
                 temp.setTexte(text);
                 temp.setDate(date);
-                dao.modifierNote(temp);
+                modeleDB.modifierNote(temp);
             }
 
             finish();

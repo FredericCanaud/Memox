@@ -5,7 +5,23 @@
       <config />
     </shared>
   </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="ChangeListManager">
+    <list default="true" id="4af14ead-20c7-4841-918a-29323c0f2245" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/ic_launcher-web.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/memox/EditNoteActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/memox/EditNoteActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_edite_note.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_edite_note.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/content_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/content_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/note_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/note_layout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/menu/edite_note_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/menu/edite_note_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +37,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
@@ -38,6 +59,8 @@
   <component name="ProjectId" id="1ZcJ0qrcxgFXqiZiCrufVWnV6ku" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="DeviceAndSnapshotComboBoxAction.selectedDevice" value="Y9E181001372" />
+    <property name="DeviceAndSnapshotComboBoxAction.selectionTime" value="2020-03-25T18:05:28.535Z" />
     <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
@@ -118,7 +141,7 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="09b337a2-101d-432b-829c-451241cacaf4" name="Default Changelist" comment="" />
+      <changelist id="4af14ead-20c7-4841-918a-29323c0f2245" name="Default Changelist" comment="" />
       <created>1585132228056</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -131,10 +154,48 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>65</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>66</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>68</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/memox/MainActivity.java</url>
+          <line>71</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

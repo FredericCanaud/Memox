@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
     private RecyclerView recyclerView;
     private ArrayList<Note> notes;
     private NotesAdapter adapter;
-    private NotesModeleDB dao;
+    private NotesModeleDB modeleDB;
     private MainActionModeCallback actionModeCallback;
     private int checkedCount = 0;
     private FloatingActionButton fab;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
             }
         });
 
-        dao = NotesDB.getInstance(this).notesInterface();
+        modeleDB = NotesDB.getInstance(this).notesInterface();
     }
 
 
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
 
         List<IDrawerItem> iDrawerItems = new ArrayList<>();
-        iDrawerItems.add(new PrimaryDrawerItem().withName("Home").withIcon(R.drawable.ic_home_black_24dp));
+        iDrawerItems.add(new PrimaryDrawerItem().withName("Accueil").withIcon(R.drawable.ic_home_black_24dp));
         iDrawerItems.add(new PrimaryDrawerItem().withName("Notes").withIcon(R.drawable.ic_note_black_24dp));
 
 
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
     private void loadNotes() {
         this.notes = new ArrayList<>();
-        List<Note> list = dao.getNotes();// get All notes from DataBase
+        List<Note> list = modeleDB.getNotes();// get All notes from DataBase
         this.notes.addAll(list);
         this.adapter = new NotesAdapter(this, this.notes);
         // set listener to adapter
@@ -272,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         String notetext = note.getTexte() + "\n\n Créé le : " +
-                NoteUtils.dateFromLong(note.getDate()) + "\n  sur :" +
+                NoteUtils.dateFromLong(note.getDate()) + "\n  grâce à l'application " +
                 getString(R.string.app_name);
         share.putExtra(Intent.EXTRA_TEXT, notetext);
         startActivity(share);
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         List<Note> checkedNotes = adapter.getNotes();
         if (checkedNotes.size() != 0) {
             for (Note note : checkedNotes) {
-                dao.supprimerNote(note);
+                modeleDB.supprimerNote(note);
             }
             loadNotes();
             Toast.makeText(this, checkedNotes.size() + " Note(s) supprimée(s) !", Toast.LENGTH_SHORT).show();
@@ -325,18 +325,18 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
     private void swipeToDelete(final Note swipedNote, final RecyclerView.ViewHolder viewHolder) {
         new AlertDialog.Builder(MainActivity.this)
-                .setMessage("Delete Note?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setMessage("Supprimer la note ?")
+                .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dao.supprimerNote(swipedNote);
+                        modeleDB.supprimerNote(swipedNote);
                         notes.remove(swipedNote);
                         adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                         showEmptyView();
 
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         recyclerView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());

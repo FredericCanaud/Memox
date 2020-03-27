@@ -13,19 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.memox.R;
 import com.example.memox.callbacks.NoteEventListener;
 import com.example.memox.model.Note;
-import com.example.memox.utils.NoteUtils;
+import com.example.memox.helpers.NoteHelpers;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> {
+/**********************         AFFICHAGE DES NOTES DANS LE MENU     *************************/
+
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.NoteHolder> {
     private Context context;
     private ArrayList<Note> notes;
     private NoteEventListener listener;
     private boolean multiCheckMode = false;
 
 
-    public NotesAdapter(Context context, ArrayList<Note> notes) {
+    public NoteAdapter(Context context, ArrayList<Note> notes) {
         this.context = context;
         this.notes = notes;
     }
@@ -38,25 +40,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> 
         return new NoteHolder(v);
     }
 
+    /**********************         ATTRIBUTION DES DONNEES DANS LE HOLDER    *************************/
+
     @Override
     public void onBindViewHolder(NoteHolder holder, int position) {
         final Note note = getNote(position);
         if (note != null) {
             holder.noteText.setText(note.getTexte());
-            holder.noteDate.setText(NoteUtils.dateFromLong(note.getDate()));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onNoteClick(note);
-                }
-            });
+            holder.noteDate.setText(NoteHelpers.dateFromLong(note.getDate()));
+            holder.itemView.setOnClickListener(view -> listener.onNoteClick(note));
 
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    listener.onNoteLongClick(note);
-                    return false;
-                }
+            holder.itemView.setOnLongClickListener(view -> {
+                listener.onNoteLongClick(note);
+                return false;
             });
 
             if (multiCheckMode) {
@@ -66,6 +62,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteHolder> 
 
         }
     }
+
+    /**********************         RECUPERATION DES NOTES     *************************/
 
     @Override
     public int getItemCount() {

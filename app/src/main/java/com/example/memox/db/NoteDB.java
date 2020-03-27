@@ -8,17 +8,20 @@ import androidx.room.RoomDatabase;
 
 import com.example.memox.model.Note;
 
-@Database(entities = Note.class, version = 1)
-public abstract class NotesDB extends RoomDatabase {
+/**********************         INITIALISATION BD     *************************/
 
-    public abstract NotesModeleDB notesInterface();
+@Database(entities = Note.class, version = 1)
+
+public abstract class NoteDB extends RoomDatabase {
+
+    public abstract NoteModeleDB noteModele();
 
     public static final String NOM_DB = "notesDb";
-    private static NotesDB instanceDB;
+    private static NoteDB instanceDB;
 
-    public static NotesDB getInstance(Context context) {
+    public static NoteDB getInstance(Context context) {
         if (instanceDB == null)
-            instanceDB = Room.databaseBuilder(context, NotesDB.class, NOM_DB)
+            instanceDB = Room.databaseBuilder(context, NoteDB.class, NOM_DB)
                     .allowMainThreadQueries()
                     .build();
         return instanceDB;

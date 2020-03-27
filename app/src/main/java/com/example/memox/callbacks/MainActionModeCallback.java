@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.example.memox.R;
 
+/**********************        ACTIONS APRES SELECTION DE NOTES    *************************/
 
 public abstract class MainActionModeCallback implements ActionMode.Callback {
     private ActionMode action;
@@ -31,9 +32,9 @@ public abstract class MainActionModeCallback implements ActionMode.Callback {
 
     }
 
-    public void setCount(String chackedCount) {
+    public void setCount(String nbNotesSelectionnes) {
         if (countItem != null)
-            this.countItem.setTitle(chackedCount);
+            this.countItem.setTitle(nbNotesSelectionnes);
     }
 
     public void changeShareItemVisible(boolean b) {

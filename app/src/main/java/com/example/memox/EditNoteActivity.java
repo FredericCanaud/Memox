@@ -10,8 +10,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.example.memox.db.NotesDB;
-import com.example.memox.db.NotesModeleDB;
+import com.example.memox.db.NoteDB;
+import com.example.memox.db.NoteModeleDB;
 import com.example.memox.model.Note;
 
 import java.util.Date;
@@ -19,15 +19,17 @@ import java.util.Date;
 public class EditNoteActivity extends AppCompatActivity {
 
     private EditText inputNote;
-    private NotesModeleDB modeleDB;
+    private NoteModeleDB modeleDB;
     private Note temp;
     public static final String NOTE_EXTRA_Key = "note_id";
+
+    /**********************         INITIALISATION ACTIVITÉ     *************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        SharedPreferences sharedPreferences = getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
-        int theme = sharedPreferences.getInt(MainActivity.THEME_Key, R.style.AppTheme);
+        SharedPreferences preferences = getSharedPreferences(MainActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        int theme = preferences.getInt(MainActivity.THEME_Key, R.style.AppTheme);
         setTheme(theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edite_note);
@@ -35,7 +37,7 @@ public class EditNoteActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         inputNote = findViewById(R.id.input_note);
-        modeleDB = NotesDB.getInstance(this).notesInterface();
+        modeleDB = NoteDB.getInstance(this).noteModele();
         if (getIntent().getExtras() != null) {
             int id = getIntent().getExtras().getInt(NOTE_EXTRA_Key, 0);
             temp = modeleDB.getNoteById(id);
@@ -57,6 +59,8 @@ public class EditNoteActivity extends AppCompatActivity {
             onSaveNote();
         return super.onOptionsItemSelected(item);
     }
+
+    /**********************         SAUVEGARDE NOTE     *************************/
 
     private void onSaveNote() {
         String text = inputNote.getText().toString();

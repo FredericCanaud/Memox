@@ -18,5 +18,5 @@ public interface NoteEventListener {
      *   Parametre : Une note
      *
      ***************************************************************/
-    void onNoteLongClick(Note note);
+     void onNoteLongClick(Note note);
 }

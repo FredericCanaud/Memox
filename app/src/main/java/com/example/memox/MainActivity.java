@@ -2,7 +2,6 @@ package com.example.memox;
 
 import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,13 +19,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.memox.adapters.NotesAdapter;
+import com.example.memox.adapters.NoteAdapter;
 import com.example.memox.callbacks.MainActionModeCallback;
 import com.example.memox.callbacks.NoteEventListener;
-import com.example.memox.db.NotesDB;
-import com.example.memox.db.NotesModeleDB;
+import com.example.memox.db.NoteModeleDB;
+import com.example.memox.db.NoteDB;
 import com.example.memox.model.Note;
-import com.example.memox.utils.NoteUtils;
+import com.example.memox.helpers.NoteHelpers;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -48,20 +47,22 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
     private static final String TAG = "MainActivity";
     private RecyclerView recyclerView;
     private ArrayList<Note> notes;
-    private NotesAdapter adapter;
-    private NotesModeleDB modeleDB;
+    private NoteAdapter adapter;
+    private NoteModeleDB modeleDB;
     private MainActionModeCallback actionModeCallback;
-    private int checkedCount = 0;
-    private FloatingActionButton fab;
-    private SharedPreferences settings;
+    private int nbNotesSelectionnes = 0;
+    private FloatingActionButton btnAjouterNote;
+    private SharedPreferences parametres;
     public static final String THEME_Key = "app_theme";
-    public static final String APP_PREFERENCES="notepad_settings";
+    public static final String APP_PREFERENCES="memox_settings";
     private int theme;
+
+    /**********************         SAUVEGARDE NOTE     *************************/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        theme = settings.getInt(THEME_Key, R.style.AppTheme);
+        parametres = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        theme = parametres.getInt(THEME_Key, R.style.AppTheme);
         setTheme(theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -72,15 +73,10 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         recyclerView = findViewById(R.id.notes_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onAddNewNote();
-            }
-        });
+        btnAjouterNote = findViewById(R.id.fab);
+        btnAjouterNote.setOnClickListener(view -> onAddNewNote());
 
-        modeleDB = NotesDB.getInstance(this).notesInterface();
+        modeleDB = NoteDB.getInstance(this).noteModele();
     }
 
 
@@ -107,18 +103,15 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
                 .withName("Thème Sombre")
                 .withChecked(theme == R.style.AppTheme_Dark)
                 .withIcon(R.drawable.ic_dark_theme)
-                .withOnCheckedChangeListener(new OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            settings.edit().putInt(THEME_Key, R.style.AppTheme_Dark).apply();
-                        } else {
-                            settings.edit().putInt(THEME_Key, R.style.AppTheme).apply();
-                        }
-                        TaskStackBuilder.create(MainActivity.this)
-                                .addNextIntent(new Intent(MainActivity.this, MainActivity.class))
-                                .addNextIntent(getIntent()).startActivities();
+                .withOnCheckedChangeListener((drawerItem, buttonView, isChecked) -> {
+                    if (isChecked) {
+                        parametres.edit().putInt(THEME_Key, R.style.AppTheme_Dark).apply();
+                    } else {
+                        parametres.edit().putInt(THEME_Key, R.style.AppTheme).apply();
                     }
+                    TaskStackBuilder.create(MainActivity.this)
+                            .addNextIntent(new Intent(MainActivity.this, MainActivity.class))
+                            .addNextIntent(getIntent()).startActivities();
                 });
 
         stockyItems.add(new PrimaryDrawerItem().withName("Paramètres").withIcon(R.drawable.ic_settings_black_24dp));
@@ -156,17 +149,19 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
     }
 
+    /**********************         CHARGEMENT DES NOTES     *************************/
+
     private void loadNotes() {
         this.notes = new ArrayList<>();
-        List<Note> list = modeleDB.getNotes();// get All notes from DataBase
+        List<Note> list = modeleDB.getNotes();
         this.notes.addAll(list);
-        this.adapter = new NotesAdapter(this, this.notes);
-        // set listener to adapter
+        this.adapter = new NoteAdapter(this, this.notes);
         this.adapter.setListener(this);
         this.recyclerView.setAdapter(adapter);
         showEmptyView();
         swipeToDeleteHelper.attachToRecyclerView(recyclerView);
     }
+    /**********************         AFFICHAGE D'AUCUNE NOTE    *************************/
 
     private void showEmptyView() {
         if (notes.size() == 0) {
@@ -179,16 +174,21 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         }
     }
 
+    /**********************         AJOUTER NOTE    *************************/
+
     private void onAddNewNote() {
         startActivity(new Intent(this, EditNoteActivity.class));
 
     }
+    /**********************         AFFICHAGE DU MENU     *************************/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    /**********************         AFFICHAGE DES PARAMETRES    *************************/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -208,36 +208,40 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         loadNotes();
     }
 
+    /**********************         MODIFIER NOTE     *************************/
+
     @Override
     public void onNoteClick(Note note) {
-        Intent edit = new Intent(this, EditNoteActivity.class);
-        edit.putExtra(NOTE_EXTRA_Key, note.getId());
-        startActivity(edit);
+        Intent modifierNote = new Intent(this, EditNoteActivity.class);
+        modifierNote.putExtra(NOTE_EXTRA_Key, note.getId());
+        startActivity(modifierNote);
 
     }
+
+    /**********************         SELECTIONNER DES NOTES     *************************/
 
     @Override
     public void onNoteLongClick(Note note) {
         note.setChecked(true);
-        checkedCount = 1;
+        nbNotesSelectionnes = 1;
 
         adapter.setListener(new NoteEventListener() {
             @Override
             public void onNoteClick(Note note) {
                 note.setChecked(!note.isChecked());
                 if (note.isChecked())
-                    checkedCount++;
-                else checkedCount--;
+                    nbNotesSelectionnes++;
+                else nbNotesSelectionnes--;
 
-                if (checkedCount > 1) {
+                if (nbNotesSelectionnes > 1) {
                     actionModeCallback.changeShareItemVisible(false);
                 } else actionModeCallback.changeShareItemVisible(true);
 
-                if (checkedCount == 0) {
+                if (nbNotesSelectionnes == 0) {
                     actionModeCallback.getAction().finish();
                 }
 
-                actionModeCallback.setCount(checkedCount + "/" + notes.size());
+                actionModeCallback.setCount(nbNotesSelectionnes + "/" + notes.size());
                 adapter.notifyDataSetChanged();
             }
 
@@ -246,6 +250,8 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
             }
         });
+
+        /**********************       CALLBACK SUPPRIMER / PARTAGER NOTE     *************************/
 
         actionModeCallback = new MainActionModeCallback() {
             @Override
@@ -262,23 +268,27 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
         };
 
         startActionMode(actionModeCallback);
-        fab.hide();
-        actionModeCallback.setCount(checkedCount + "/" + notes.size());
+        btnAjouterNote.hide();
+        actionModeCallback.setCount(nbNotesSelectionnes + "/" + notes.size());
     }
+
+    /**********************         PARTAGER NOTE    *************************/
 
     private void onShareNote() {
 
         Note note = adapter.getNotes().get(0);
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("text/plain");
+        Intent partager = new Intent(Intent.ACTION_SEND);
+        partager.setType("text/plain");
         String notetext = note.getTexte() + "\n\n Créé le : " +
-                NoteUtils.dateFromLong(note.getDate()) + "\n  grâce à l'application " +
+                NoteHelpers.dateFromLong(note.getDate()) + "\n  grâce à l'application " +
                 getString(R.string.app_name);
-        share.putExtra(Intent.EXTRA_TEXT, notetext);
-        startActivity(share);
+        partager.putExtra(Intent.EXTRA_TEXT, notetext);
+        startActivity(partager);
 
 
     }
+
+    /**********************         SUPPRIMER NOTE PAR SELECTION    *************************/
 
     private void onDeleteMultiNotes() {
 
@@ -299,8 +309,10 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
 
         adapter.setMultiCheckMode(false);
         adapter.setListener(this);
-        fab.hide();
+        btnAjouterNote.hide();
     }
+
+    /**********************         SUPPRIMER NOTE PAR SWAP    *************************/
 
     private ItemTouchHelper swipeToDeleteHelper = new ItemTouchHelper(
             new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -313,9 +325,9 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
                 public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                     if (notes != null) {
                         // get swiped note
-                        Note swipedNote = notes.get(viewHolder.getAdapterPosition());
-                        if (swipedNote != null) {
-                            swipeToDelete(swipedNote, viewHolder);
+                        Note noteSwapee = notes.get(viewHolder.getAdapterPosition());
+                        if (noteSwapee != null) {
+                            supprimerParSwap(noteSwapee, viewHolder);
 
                         }
 
@@ -323,27 +335,17 @@ public class MainActivity extends AppCompatActivity implements NoteEventListener
                 }
             });
 
-    private void swipeToDelete(final Note swipedNote, final RecyclerView.ViewHolder viewHolder) {
+    private void supprimerParSwap(final Note swipedNote, final RecyclerView.ViewHolder viewHolder) {
         new AlertDialog.Builder(MainActivity.this)
                 .setMessage("Supprimer la note ?")
-                .setPositiveButton("Supprimer", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        modeleDB.supprimerNote(swipedNote);
-                        notes.remove(swipedNote);
-                        adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-                        showEmptyView();
+                .setPositiveButton("Supprimer", (dialogInterface, i) -> {
+                    modeleDB.supprimerNote(swipedNote);
+                    notes.remove(swipedNote);
+                    adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                    showEmptyView();
 
-                    }
                 })
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        recyclerView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition());
-
-
-                    }
-                })
+                .setNegativeButton("Annuler", (dialogInterface, i) -> recyclerView.getAdapter().notifyItemChanged(viewHolder.getAdapterPosition()))
                 .setCancelable(false)
                 .create().show();
 

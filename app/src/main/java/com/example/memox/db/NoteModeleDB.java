@@ -14,7 +14,7 @@ import com.example.memox.model.Note;
 import java.util.List;
 
 @Dao
-public interface NotesModeleDB {
+public interface NoteModeleDB {
 
      /***************************************************************
      *

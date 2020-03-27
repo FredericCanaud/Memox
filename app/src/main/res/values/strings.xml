@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Memox</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="creation">CreaMemox</string>
-    <string name="back">Retour au menu principal</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="whats_in_your_mind">Écrivez votre note ici...</string>
+    <string name="share_note">Partager une note</string>
+    <string name="delete_notes">Supprimer une note</string>
+    <string name="no_notes">Aucune note ! :(</string>
 </resources>
